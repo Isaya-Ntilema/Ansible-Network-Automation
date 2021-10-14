@@ -1,0 +1,71 @@
+---
+- name: INSTALL WEB SERVERS AND HAPROXY
+- hosts: webservers
+  gather_facts: yes
+  tasks:
+   - name: Update repositories cache
+     become: yes
+     apt:
+      update_cache: yes
+      cache_valid_time: 3600
+   - name: Installing nginx
+     become: yes
+     apt:
+      name: nginx
+      state: latest
+   - name: Installing php
+     become: yes
+     apt:
+      name: php
+      state: present
+   - name: Installing php-fpm
+     become: yes
+     apt:
+      name: php7.4-fpm
+      state: present
+   - name: Starting nginx server
+     become: yes
+     service:
+         name: nginx
+         state: started
+   - name: Copying index.php file
+     become: yes
+     copy:
+       src: index.php
+       dest: /var/www/html/
+   - name: Template file uploading
+     become: yes
+     template:
+       src: nginx.conf
+       dest: /etc/nginx/sites-available/default
+   - name: Enabling configuration file
+     become: yes
+     file:
+       src: /etc/nginx/sites-available/default
+       dest: /etc/nginx/sites-enabled/default
+       state: link
+   - name: Restarting Web Servers
+     become: yes
+     service:
+       name: nginx
+       state: restarted
+- hosts: haproxy
+  gather_facts: yes
+  become: yes
+  tasks:
+   - name: Upadating repositories cache
+     apt:
+      update_cache: yes
+   - name: Installing haproxy
+     become: yes
+     apt:
+      name: haproxy
+      state: present
+   - name: uploading haproxy configuration file
+     template:
+      src: HAproxy.cfg
+      dest: /etc/haproxy/haproxy.cfg
+   - name: Reinitializing HAProxy
+     service:
+       name: haproxy
+       state: restarted
