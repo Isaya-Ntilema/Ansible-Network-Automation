@@ -12,17 +12,12 @@
       apt:
         name: nginx
         state: latest
-    - name: Installing php
-      become: yes
-      apt:
-        name: php
-        state: present
-    - name: Installing php-fpm
+    - name: Installing php7.4-fpm
       become: yes
       apt:
         name: php7.4-fpm
         state: present
-    - name: Starting nginx server
+    - name: Starting nginx Web server
       become: yes
       service:
         name: nginx
@@ -32,7 +27,7 @@
       copy:
         src: index.php
         dest: /var/www/html/
-    - name: Template file uploading
+    - name: Uploading template file
       become: yes
       template:
         src: nginx.conf.j2
@@ -43,7 +38,7 @@
         src: /etc/nginx/sites-available/default
         dest: /etc/nginx/sites-enabled/default
         state: link
-    - name: Restarting Web Servers
+    - name: Restarting Web Server
       become: yes
       service:
         name: nginx
@@ -68,4 +63,3 @@
       service:
         name: haproxy
         state: restarted
-
