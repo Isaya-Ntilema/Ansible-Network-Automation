@@ -35,7 +35,7 @@
     - name: Template file uploading
       become: yes
       template:
-        src: nginx.conf.j2
+        src: nginx.conf
         dest: /etc/nginx/sites-available/default
     - name: Enabling configuration file
       become: yes
@@ -62,7 +62,7 @@
         state: present
     - name: uploading haproxy configuration file
       template:
-        src: HAproxy.cfg.j2
+        src: HAproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
     - name: Reinitializing HAProxy
       service:
