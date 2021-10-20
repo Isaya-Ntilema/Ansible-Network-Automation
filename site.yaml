@@ -11,7 +11,7 @@
       become: yes
       apt:
         name: nginx
-        state: present
+        state: latest
     - name: Installing php7.4-fpm
       become: yes
       apt:
