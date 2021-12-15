@@ -17,20 +17,15 @@
       apt:
         name: php7.4-fpm
         state: present
-    - name: Starting nginx Web server
-      become: yes
-      service:
-        name: nginx
-        state: started
     - name: Copying index.php file
       become: yes
       copy:
         src: index.php
         dest: /var/www/html/
-    - name: Uploading template file
+    - name: Uploading Nginx configuration file
       become: yes
-      template:
-        src: nginx.conf.j2
+      copy:
+        src: nginx.conf
         dest: /etc/nginx/sites-available/default
     - name: Enabling configuration file
       become: yes
@@ -38,11 +33,11 @@
         src: /etc/nginx/sites-available/default
         dest: /etc/nginx/sites-enabled/default
         state: link
-    - name: Restarting Web Server
+    - name: Starting a Web Server
       become: yes
       service:
         name: nginx
-        state: restarted
+        state: started
 - hosts: haproxy
   gather_facts: yes
   become: yes
@@ -56,8 +51,8 @@
         name: haproxy
         state: present
     - name: uploading haproxy configuration file
-      template:
-        src: haproxy.cfg.j2
+      copy:
+        src: haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
     - name: Reinitializing HAProxy
       service:
