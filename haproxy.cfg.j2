@@ -42,10 +42,6 @@ frontend open_connections
 backend backend_server
     mode http
     balance roundrobin
-{% for servers in groups['webservers'] %}
-    server {{ hostvars[servers]['inventory_hostname'] }} {{ hostvars[servers]['ansible_default_ipv4']['address'] }}:80 check
+{% for host in groups['webservers'] %}
+   server  {{ host }} {{ hostvars[host]["ansible_default_ipv4"]["address"] }}:80
 {% endfor %}
-
-#{% for host in groups['webservers'] %}
-#   server  {{ host }} {{ hostvars[host]["ansible_default_ipv4"]["address"] }}:80
-#{% endfor %}
