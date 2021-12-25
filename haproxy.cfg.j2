@@ -36,11 +36,9 @@ defaults
 
 frontend open_connections
     bind :80
-    mode http
     default_backend backend_server
 
 backend backend_server
-    mode http
     balance roundrobin
 {% for host in groups['webservers'] %}
    server  {{ host }} {{ hostvars[host]["ansible_default_ipv4"]["address"] }}:80
