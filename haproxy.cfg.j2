@@ -35,7 +35,7 @@ defaults
 	errorfile 504 /etc/haproxy/errors/504.http
 
 frontend web
-    bind 45.114.120.41:80
+    bind *:80
     default_backend web_servers
 
 backend web_servers
