@@ -22,10 +22,10 @@ defaults
 	log	global
 	mode	http
 	option	httplog
-        timeout connect 10s
-        timeout client  30s
-        timeout server  30s
-	maxconn 3000
+	option	dontlognull
+        timeout connect 5000
+        timeout client  50000
+        timeout server  50000
 	errorfile 400 /etc/haproxy/errors/400.http
 	errorfile 403 /etc/haproxy/errors/403.http
 	errorfile 408 /etc/haproxy/errors/408.http
@@ -40,6 +40,6 @@ frontend web
 
 backend web_servers
     balance roundrobin
-{% for host in groups['webservers'] %}
-   server  {{ host }} {{ hostvars[host]["ansible_default_ipv4"]["address"] }}:80
-{% endfor %}
+    server serverA 10.0.1.25:80 check
+    server serverB 10.0.1.30:80 check
+    server serverC 10.0.1.29:80 check
