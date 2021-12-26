@@ -51,8 +51,8 @@
         name: haproxy
         state: present
     - name: uploading haproxy configuration file
-      template:
-        src: ./haproxy.cfg.j2
+      copy:
+        src: ./haproxy.cfg
         dest: /etc/haproxy/haproxy.cfg
     - name: Reinitializing HAProxy
       service:
