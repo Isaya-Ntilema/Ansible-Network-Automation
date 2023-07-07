@@ -1,5 +1,5 @@
-[haproxy] 
-HAproxy 
+[proxyserver] 
+NGINXproxy 
 
 [webservers] 
 devA 

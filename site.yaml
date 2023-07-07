@@ -19,20 +19,35 @@
         executable: pip3
         state: latest
 
-    - name: uploading the app.py application
+    - name: Upload the application to the servers
       copy:
-        src: ./app.py
+        src: ./service.py
         dest: /home/ubuntu
         owner: ubuntu
         group: ubuntu
         mode: 0644
 
-    - name: Running the application
-      shell: python3 /home/ubuntu/app.py
-      async: 3600
+    - name: Run the application
+      shell: python3 /home/ubuntu/service.py
+      async: 86400
       poll: 0
+      
+    - name: Install the snmpdaemon
+      apt:
+              name: snmpd
+              state: latest
+    
+    - name: Copy the snmpd config file
+      ansible.builtin.copy:
+              src: ./snmpd.conf
+              dest: /etc/snmp/snmpd.conf
 
-- hosts: haproxy
+    - name: Run the snmpdaemon
+      service:
+              name: snmpd
+              state: restarted 
+
+- hosts: proxyserver
   gather_facts: yes
   become: yes
   tasks:
@@ -40,15 +55,18 @@
       apt:
         update_cache: yes
         cache_valid_time: 3600
-    - name: Installing HAproxy
+
+    - name: Installing NGINX 
       apt:
-        name: haproxy
+        name: nginx
         state: present
-    - name: uploading haproxy configuration file
-      template:
-        src: ./haproxy.cfg.j2
-        dest: /etc/haproxy/haproxy.cfg
-    - name: Reinitializing HAProxy
+
+    - name: uploading NGINX configuration file
+      ansible.builtin.copy:
+        src: ./nginx.conf
+        dest: /etc/nginx/nginx.conf
+
+    - name: Restarting NGINX
       service:
-        name: haproxy
+        name: nginx
         state: restarted
