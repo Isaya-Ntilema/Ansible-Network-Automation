@@ -87,7 +87,3 @@ stream {
     proxy_responses 0;
   }
 }
-
-{% for server in groups['webservers'] %}
-    server  {{ server }} {{ hostvars[server]['ansible_default_ipv4']['address'] }}:5000;
-{% endfor %}
