@@ -65,13 +65,13 @@ http {
 stream {
   upstream webservers {
 {% for server in groups['webservers'] %}
-    server  {{ server }} {{ hostvars[server]['ansible_default_ipv4']['address'] }}:161;
+    server  {{ hostvars[server]['ansible_default_ipv4']['address'] }}:161;
 {% endfor %}
   }
 
   upstream backend_servers {
 {% for server in groups['webservers'] %}
-    server  {{ server }} {{ hostvars[server]['ansible_default_ipv4']['address'] }}:5000;
+    server  {{ hostvars[server]['ansible_default_ipv4']['address'] }}:5000;
 {% endfor %}
   }
 
